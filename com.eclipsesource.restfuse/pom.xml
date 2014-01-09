@@ -10,9 +10,9 @@
 		<relativePath>../build/com.eclipsesource.restfuse.releng</relativePath>
 	</parent>
 
-	<groupId>com.eclipsesource</groupId>
+	<groupId>com.bqreaders.os</groupId>
 	<artifactId>com.eclipsesource.restfuse</artifactId>
-	<version>1.2.0-BQ.1</version>
+	<version>1.2.0</version>
 	<packaging>eclipse-plugin</packaging>
 
 	<profiles>
