@@ -2,10 +2,8 @@
  * Copyright (c) 2011 EclipseSource and others. All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html 
- * 
- * Contributors: Holger Staudacher - initial API and implementation
- * 
+ * http://www.eclipse.org/legal/epl-v10.html Contributors: Holger Staudacher - initial API and
+ * implementation
  ******************************************************************************/
 package com.eclipsesource.restfuse.internal;
 
@@ -46,7 +44,7 @@ public class RequestConfiguration {
     addAuthentication( call, request );
     addContentType( call, request );
     addHeader( call, request, context );
-    addBody( call, request );
+    addBody( call, request, context );
     return request;
   }
 
@@ -57,15 +55,17 @@ public class RequestConfiguration {
     while( matcher.find() ) {
       String segment = matcher.group( 1 );
       checkSubstitutionExists( context, segment );
-      substitutedPath = substitutedPath.replace( "{" + segment + "}", 
-                                                 context.getPathSegments().get( segment ) );
+      substitutedPath = substitutedPath.replace( "{" + segment + "}", context.getPathSegments()
+        .get( segment ) );
     }
     return substitutedPath;
   }
 
   private void checkSubstitutionExists( RequestContext context, String segment ) {
     if( !context.getPathSegments().containsKey( segment ) ) {
-      throw new IllegalStateException( "Misconfigured Destination. Could not replace {" + segment + "}." );
+      throw new IllegalStateException( "Misconfigured Destination. Could not replace {"
+                                       + segment
+                                       + "}." );
     }
   }
 
@@ -96,8 +96,9 @@ public class RequestConfiguration {
   private void addHeadersFromContext( InternalRequest request, RequestContext context ) {
     if( context != null && !context.getHeaders().isEmpty() ) {
       Map<String, String> headers = context.getHeaders();
-      for( String name : headers.keySet() )
+      for( String name : headers.keySet() ) {
         request.addHeader( name, headers.get( name ) );
+      }
     }
   }
 
@@ -110,11 +111,11 @@ public class RequestConfiguration {
     }
   }
 
-  private void addBody( HttpTest test, InternalRequest request ) {
+  private void addBody( HttpTest test, InternalRequest request, RequestContext context ) {
     if( !test.file().equals( "" ) ) {
       request.setContent( getFileStream( test.file() ) );
     } else if( !test.content().equals( "" ) ) {
-      request.setContent( getContentStream( test.content() ) );
+      request.setContent( getContentStream( substituePathSegments( test.content(), context ) ) );
     }
   }
 
